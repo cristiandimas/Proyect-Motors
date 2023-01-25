@@ -1,0 +1,14 @@
+const { Router } = require("express");
+const { findAllUsers, createUsers, updateUsers, findUser, deleteUser } = require("../controllers/users.controller");
+
+const router = Router();
+
+router.get('', findAllUsers);
+router.get('/:id', findUser);
+router.post('', createUsers);
+router.patch('/:id', updateUsers);
+router.delete('/:id', deleteUser);
+
+module.exports = {
+  usersRouter: router,
+};
