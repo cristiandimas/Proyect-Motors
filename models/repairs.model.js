@@ -17,6 +17,10 @@ const Repairs = db.define('repairs', {
     defaultValue: 'pending',
     enum: ['pending', 'completed', 'cancelled'],
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
 
 module.exports = Repairs;
