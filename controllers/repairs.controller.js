@@ -9,7 +9,7 @@ exports.findAllRepairs = async (req, res) => {
     });
     res.status(200).json({
       status: 'success',
-      message: 'Repairs was found successfully',
+      message: 'Repairs found successfully',
       repairs,
     });
   } catch (error) {
@@ -23,22 +23,11 @@ exports.findAllRepairs = async (req, res) => {
 
 exports.findRepair = async (req, res) => {
   try {
-    const { id } = req.params;
-    const repair = await Repairs.findOne({
-      where: {
-        id,
-        status: 'pending',
-      },
-    });
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The repair was not found',
-      });
-    }
+    const { repair } = req;
+
     return res.status(200).json({
       status: 'success',
-      message: 'Method GET for find one repair for id',
+      message: 'Repair found successfully',
       repair,
     });
   } catch (error) {
@@ -51,9 +40,11 @@ exports.findRepair = async (req, res) => {
 };
 exports.createRepairs = async (req, res) => {
   try {
-    const { date, userId } = req.body;
+    const { date, motorsNumber, description, userId } = req.body;
     const newRepair = await Repairs.create({
       date,
+      motorsNumber,
+      description,
       userId,
     });
     res.status(200).json({
@@ -72,21 +63,7 @@ exports.createRepairs = async (req, res) => {
 
 exports.updateRepairs = async (req, res) => {
   try {
-    const { id } = req.params;
-    // const { status } = req.body;
-    const repair = await Repairs.findOne({
-      where: {
-        id,
-        status: 'pending',
-      },
-    });
-
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The repair was not found',
-      });
-    }
+    const { repair } = req;
 
     await repair.update({ status: 'completed' });
 
@@ -104,25 +81,12 @@ exports.updateRepairs = async (req, res) => {
 };
 exports.deleteRepair = async (req, res) => {
   try {
-    const { id } = req.params;
-    const repair = await Repairs.findOne({
-      where: {
-        id,
-        status: 'pending',
-      },
-    });
-
-    if (!repair) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The repair was not found',
-      });
-    }
+    const { repair } = req;
     await repair.update({ status: 'cancelled' });
 
     res.status(200).json({
       status: 'success',
-      message: `The Repairs with id ${id} was deleted`,
+      message: `The Repairs with id ${repair.id} was deleted`,
     });
   } catch (error) {
     console.log(error);

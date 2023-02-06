@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('../database/db');
-
+const Repairs = require('./repairs.model');
 
 const Users = db.define('users', {
   id: {
@@ -11,28 +11,34 @@ const Users = db.define('users', {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,    
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
     unique: true,
-    allowNull: false,    
+    allowNull: false,
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   role: {
-    type:DataTypes.STRING,
+    type: DataTypes.ENUM('client', 'employee'),
     allowNull: false,
-    enum: ['client', 'employee']
   },
   status: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('available', 'unavailable'),
     allowNull: false,
     defaultValue: 'available',
-    enum: ['available', 'unavailable']
-  }
+  },
+});
 
+Users.hasMany(Repairs, {
+  foreignKey: 'userId',
+  sourceKey: 'id',
+});
+Repairs.belongsTo(Users, {
+  foreignKey: 'userId',
+  targetKey: 'id',
 });
 module.exports = Users;
