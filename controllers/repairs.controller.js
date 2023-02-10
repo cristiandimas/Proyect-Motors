@@ -1,98 +1,61 @@
 const Repairs = require('../models/repairs.model');
+const catchAsync = require('../utils/catchAsync');
 
-exports.findAllRepairs = async (req, res) => {
-  try {
-    const repairs = await Repairs.findAll({
-      where: {
-        status: 'pending',
-      },
-    });
-    res.status(200).json({
-      status: 'success',
-      message: 'Repairs found successfully',
-      repairs,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+exports.findAllRepairs = catchAsync(async (req, res, next) => {
+  const repairs = await Repairs.findAll({
+    where: {
+      status: 'pending',
+    },
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'Repairs found successfully',
+    repairs,
+  });
+});
 
-exports.findRepair = async (req, res) => {
-  try {
-    const { repair } = req;
+exports.findRepair = catchAsync(async (req, res, next) => {
+  const { repair } = req;
 
-    return res.status(200).json({
-      status: 'success',
-      message: 'Repair found successfully',
-      repair,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
-exports.createRepairs = async (req, res) => {
-  try {
-    const { date, motorsNumber, description, userId } = req.body;
-    const newRepair = await Repairs.create({
-      date,
-      motorsNumber,
-      description,
-      userId,
-    });
-    res.status(200).json({
-      status: 'success',
-      message: 'The New Repair was been created',
-      newRepair,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+  return res.status(200).json({
+    status: 'success',
+    message: 'Repair found successfully',
+    repair,
+  });
+});
 
-exports.updateRepairs = async (req, res) => {
-  try {
-    const { repair } = req;
+exports.createRepairs = catchAsync(async (req, res, next) => {
+  const { date, motorsNumber, description, userId } = req.body;
+  const newRepair = await Repairs.create({
+    date,
+    motorsNumber,
+    description,
+    userId,
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'The New Repair was been created',
+    newRepair,
+  });
+});
 
-    await repair.update({ status: 'completed' });
+exports.updateRepairs = catchAsync(async (req, res, next) => {
+  const { repair } = req;
 
-    res.status(200).json({
-      status: 'success',
-      message: 'The repair was been update',
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
-exports.deleteRepair = async (req, res) => {
-  try {
-    const { repair } = req;
-    await repair.update({ status: 'cancelled' });
+  await repair.update({ status: 'completed' });
 
-    res.status(200).json({
-      status: 'success',
-      message: `The Repairs with id ${repair.id} was deleted`,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'The repair was been update',
+  });
+});
+
+exports.deleteRepair = catchAsync(async (req, res, next) => {
+  const { repair } = req;
+  await repair.update({ status: 'cancelled' });
+
+  res.status(200).json({
+    status: 'success',
+    message: `The Repairs with id ${repair.id} was deleted`,
+  });
+});

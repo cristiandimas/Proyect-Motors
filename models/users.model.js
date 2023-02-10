@@ -25,6 +25,7 @@ const Users = db.define('users', {
   role: {
     type: DataTypes.ENUM('client', 'employee'),
     allowNull: false,
+    defaultValue: 'client',
   },
   status: {
     type: DataTypes.ENUM('available', 'unavailable'),

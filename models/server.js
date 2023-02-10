@@ -4,6 +4,8 @@ const { usersRouter } = require('../routes/users.routes');
 const { repairsRouter } = require('../routes/repairs.routes');
 const { db } = require('../database/db');
 const morgan = require('morgan');
+const AppError = require('../utils/appError');
+const globalErrorHandler = require('../controllers/error.controller');
 
 class Server {
   constructor() {
@@ -34,6 +36,15 @@ class Server {
     this.app.use(this.paths.users, usersRouter);
     //indicamos el uso de la ruta repairs
     this.app.use(this.paths.repairs, repairsRouter);
+
+    /* A catch all route. It will catch all requests that do not match any other route. */
+    this.app.all('*', (req, res, next) => {
+      return next(
+        new AppError(`Can't find ${req.originalUrl} on this server!`, 404)
+      );
+    });
+
+    this.app.use(globalErrorHandler);
   }
   //creamos metodo para la conexión a la base de datos
   database() {

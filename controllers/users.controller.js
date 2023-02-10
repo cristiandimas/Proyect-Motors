@@ -1,104 +1,65 @@
 const Users = require('../models/users.model');
+const catchAsync = require('../utils/catchAsync');
 
-exports.findAllUsers = async (req, res) => {
-  try {
-    const users = await Users.findAll({
-      where: {
-        status: 'available',
-      },
-    });
+exports.findAllUsers = catchAsync(async (req, res, next) => {
+  const users = await Users.findAll({
+    where: {
+      status: 'available',
+    },
+  });
 
-    res.json({
-      status: 'success',
-      message: 'Method findAllUsers',
-      users,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+  res.json({
+    status: 'success',
+    message: 'Method findAllUsers',
+    users,
+  });
+});
 
-exports.findUser = async (req, res) => {
-  try {
-    const { user } = req;
-    return res.status(200).json({
-      status: 'success',
-      message: 'Method findUser',
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+exports.findUser = catchAsync(async (req, res, next) => {
+  const { user } = req;
+  return res.status(200).json({
+    status: 'success',
+    message: 'Method findUser',
+    user,
+  });
+});
 
-exports.createUsers = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
-    const newUser = await Users.create({
-      name: name.toLowerCase(),
-      email: email.toLowerCase(),
-      password,
-      role: role.toLowerCase(),
-    });
-    res.status(200).json({
-      status: 'success',
-      message: 'Method createUsers',
-      newUser,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+exports.createUsers = catchAsync(async (req, res, next) => {
+  const { name, email, password, role } = req.body;
+  const newUser = await Users.create({
+    name: name.toLowerCase(),
+    email: email.toLowerCase(),
+    password,
+    role: role.toLowerCase(),
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'Method createUsers',
+    newUser,
+  });
+});
 
-exports.updateUsers = async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    const { user } = req;
+exports.updateUsers = catchAsync(async (req, res, next) => {
+  const { name, email } = req.body;
+  const { user } = req;
 
-    const updateUser = await user.update({ name, email });
+  const updateUser = await user.update({ name, email });
 
-    res.status(200).json({
-      status: 'success',
-      message: 'The User was been update',
-      updateUser,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'The User was been update',
+    updateUser,
+  });
+});
 
-exports.deleteUser = async (req, res) => {
-  try {
-    const { user } = req;
-    await user.update({
-      status: 'unavailable',
-    });
-    res.status(200).json({
-      status: 'success',
-      message: `The User with id ${user.id} was been deleted`,
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const { user } = req;
+  await user.update({
+    status: 'unavailable',
+  });
+  res.status(200).json({
+    status: 'success',
+    message: `The User with id ${user.id} was been deleted`,
+    user,
+  });
+});
