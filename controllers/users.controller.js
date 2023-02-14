@@ -34,7 +34,7 @@ exports.createUsers = catchAsync(async (req, res, next) => {
   });
   res.status(200).json({
     status: 'success',
-    message: 'Method createUsers',
+    message: 'User has been created successfully',
     newUser,
   });
 });

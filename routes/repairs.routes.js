@@ -6,6 +6,7 @@ const {
   updateRepairs,
   findRepair,
   deleteRepair,
+  findAllRepairsCompleted,
 } = require('../controllers/repairs.controller');
 const { validRepairsById } = require('../middlewares/repairs.middlewares');
 const { validationFields } = require('../middlewares/validationFields.middlewares');
@@ -13,6 +14,7 @@ const { validationFields } = require('../middlewares/validationFields.middleware
 const router = Router();
 
 router.get('', findAllRepairs);
+router.get('/completed', findAllRepairsCompleted);
 router.get('/:id', validRepairsById, findRepair);
 router.post(
   '',
