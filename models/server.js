@@ -6,7 +6,10 @@ const { db } = require('../database/db');
 const morgan = require('morgan');
 const AppError = require('../utils/appError');
 const globalErrorHandler = require('../controllers/error.controller');
+const { authRouter } = require('../routes/auth.routes');
 
+/* The Server class is a class that creates an express server, and it has a constructor that sets up
+the server, and it has a listen method that starts the server listening on the port. */
 class Server {
   constructor() {
     this.app = express();
@@ -16,6 +19,7 @@ class Server {
     this.paths = {
       users: '/api/v1/users',
       repairs: '/api/v1/repairs',
+      auth: '/api/v1/auth',
     };
     //Llamada al metodo de conexión a la base de  datos
     this.database();
@@ -36,6 +40,8 @@ class Server {
     this.app.use(this.paths.users, usersRouter);
     //indicamos el uso de la ruta repairs
     this.app.use(this.paths.repairs, repairsRouter);
+    ////indicamos el uso de la ruta de  autenticacion
+    this.app.use(this.paths.auth, authRouter);
 
     /* A catch all route. It will catch all requests that do not match any other route. */
     this.app.all('*', (req, res, next) => {

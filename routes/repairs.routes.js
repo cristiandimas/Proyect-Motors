@@ -16,6 +16,7 @@ const router = Router();
 router.get('', findAllRepairs);
 router.get('/completed', findAllRepairsCompleted);
 router.get('/:id', validRepairsById, findRepair);
+/* Validating the fields of the form. */
 router.post(
   '',
   [

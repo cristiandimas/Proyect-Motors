@@ -27,6 +27,10 @@ const Users = db.define('users', {
     allowNull: false,
     defaultValue: 'client',
   },
+  paswordChangedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.ENUM('available', 'unavailable'),
     allowNull: false,

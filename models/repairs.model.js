@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('../database/db');
 
+/* Creating a table in the database. */
 const Repairs = db.define('repairs', {
   id: {
     type: DataTypes.INTEGER,

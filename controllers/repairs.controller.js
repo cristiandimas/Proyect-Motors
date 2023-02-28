@@ -2,7 +2,9 @@ const Repairs = require('../models/repairs.model');
 const Users = require('../models/users.model');
 const catchAsync = require('../utils/catchAsync');
 
+/* Una función que exporta la función findAllRepairs. */
 exports.findAllRepairs = catchAsync(async (req, res, next) => {
+  /* Una consulta a la base de datos. */
   const repairs = await Repairs.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     where: {
@@ -58,6 +60,7 @@ exports.findRepair = catchAsync(async (req, res, next) => {
 });
 
 exports.createRepairs = catchAsync(async (req, res, next) => {
+ /* Creación de una nueva reparación. */
   const { date, motorsNumber, description, userId } = req.body;
   const newRepair = await Repairs.create({
     date,
@@ -73,6 +76,7 @@ exports.createRepairs = catchAsync(async (req, res, next) => {
 });
 
 exports.updateRepairs = catchAsync(async (req, res, next) => {
+ /* Actualizando el estado de la reparación a completada. */
   const { repair } = req;
 
   await repair.update({ status: 'completed' });
@@ -84,6 +88,7 @@ exports.updateRepairs = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteRepair = catchAsync(async (req, res, next) => {
+ /* Actualizando el estado de la reparación a cancelado. */
   const { repair } = req;
   await repair.update({ status: 'cancelled' });
 

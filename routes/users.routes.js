@@ -2,10 +2,10 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const {
   findAllUsers,
-  createUsers,
   updateUsers,
   findUser,
   deleteUser,
+  updatePassword,
 } = require('../controllers/users.controller');
 const {
   validUserById,
@@ -17,25 +17,12 @@ const {
 
 const router = Router();
 
+/* Una ruta que encontrará a todos los usuarios. */
 router.get('/', findAllUsers);
+/* Una ruta que va a encontrar un usuario por id. */
 router.get('/:id', validUserById, findUser);
-router.post(
-  '/',
-  [
-    check('name', 'The name is require').not().isEmpty(),
-    check('email', 'The email is require').not().isEmpty(),
-    check('email', 'The email must be a correct format').isEmail(),
-    check('password', 'The password is require').not().isEmpty(),
-    check('password', 'The password is not Alphanumeric').isAlphanumeric(),
-    check(
-      'password',
-      'The password must be at least 6 characters long'
-    ).isLength({ min: 6 }),
-    validationFields,
-    validUserByEmail,
-  ],
-  createUsers
-);
+
+/* Una solicitud de patch para actualizar el usuario. */
 router.patch(
   '/:id',
   [
@@ -47,6 +34,22 @@ router.patch(
   ],
   updateUsers
 );
+
+/* Una solicitud de patch para actualizar la contraseña del usuario. */
+router.patch(
+  '/password/:id',
+  [
+    check('currentPassword', 'The current password must be mandatory')
+      .not()
+      .isEmpty(),
+    check('newPassword', 'The new password must be mandatory ').not().isEmpty(),
+    validationFields,
+    validUserById,
+
+  ],
+  updatePassword
+);
+
 router.delete('/:id', validUserById, deleteUser);
 
 module.exports = {
