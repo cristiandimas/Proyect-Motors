@@ -27,7 +27,7 @@ const Users = db.define('users', {
     allowNull: false,
     defaultValue: 'client',
   },
-  paswordChangedAt: {
+  passwordChangedAt: {
     type: DataTypes.DATE,
     allowNull: true,
   },

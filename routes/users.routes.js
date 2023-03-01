@@ -8,14 +8,17 @@ const {
   updatePassword,
 } = require('../controllers/users.controller');
 const {
-  validUserById,
-  validUserByEmail,
-} = require('../middlewares/users.middlewares');
+  protecUpdateAccount,
+  protect,
+} = require('../middlewares/auth.middlewares');
+const { validUserById } = require('../middlewares/users.middlewares');
 const {
   validationFields,
 } = require('../middlewares/validationFields.middlewares');
 
 const router = Router();
+
+router.use(protect);
 
 /* Una ruta que encontrará a todos los usuarios. */
 router.get('/', findAllUsers);
@@ -31,6 +34,7 @@ router.patch(
     check('email', 'The email must be a correct format').isEmail(),
     validationFields,
     validUserById,
+    protecUpdateAccount,
   ],
   updateUsers
 );
@@ -45,12 +49,12 @@ router.patch(
     check('newPassword', 'The new password must be mandatory ').not().isEmpty(),
     validationFields,
     validUserById,
-
+    protecUpdateAccount,
   ],
   updatePassword
 );
 
-router.delete('/:id', validUserById, deleteUser);
+router.delete('/:id', validUserById, protecUpdateAccount, deleteUser);
 
 module.exports = {
   usersRouter: router,

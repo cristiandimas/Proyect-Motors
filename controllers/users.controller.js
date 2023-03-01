@@ -1,6 +1,7 @@
 const Users = require('../models/users.model');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const bcrypt = require('bcryptjs');
 
 exports.findAllUsers = catchAsync(async (req, res, next) => {
   const users = await Users.findAll({
@@ -65,7 +66,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const encriptedPassword = await bcrypt.hash(newPassword, salt);
   await user.update({
     password: encriptedPassword,
-    paswordChangedAt: new Date(),
+    passwordChangedAt: new Date(),
   });
 
   res.status(200).json({

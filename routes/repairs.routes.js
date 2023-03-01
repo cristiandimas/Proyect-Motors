@@ -8,15 +8,22 @@ const {
   deleteRepair,
   findAllRepairsCompleted,
 } = require('../controllers/repairs.controller');
+const { protect, restrictTo } = require('../middlewares/auth.middlewares');
 const { validRepairsById } = require('../middlewares/repairs.middlewares');
-const { validationFields } = require('../middlewares/validationFields.middlewares');
+const {
+  validationFields,
+} = require('../middlewares/validationFields.middlewares');
 
 const router = Router();
 
-router.get('', findAllRepairs);
+/* Un middleware que se ejecuta antes que las demás rutas. */
+router.use(protect);
+
+router.get('', restrictTo('employee'), findAllRepairs);
 router.get('/completed', findAllRepairsCompleted);
-router.get('/:id', validRepairsById, findRepair);
-/* Validating the fields of the form. */
+router.get('/:id', validRepairsById, restrictTo('employee'), findRepair);
+
+/* Un middleware que valida los campos del formulario. */
 router.post(
   '',
   [
@@ -24,11 +31,12 @@ router.post(
     check('motorsNumber', 'The Motors Number is require').not().isEmpty(),
     check('motorsNumber', 'The engine number must be numerical').isNumeric(),
     check('description', 'Description cannot be empty').not().isEmpty(),
-  ],validationFields,
+  ],
+  validationFields,
   createRepairs
 );
-router.patch('/:id', validRepairsById, updateRepairs);
-router.delete('/:id', validRepairsById, deleteRepair);
+router.patch('/:id', validRepairsById, restrictTo('employee'), updateRepairs);
+router.delete('/:id', validRepairsById, restrictTo('employee'), deleteRepair);
 
 module.exports = {
   repairsRouter: router,
